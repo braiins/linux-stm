@@ -1,0 +1,10 @@
+# Enabling PWM Backlight at boot
+git rev: 1a907254fb8e27fb0e7ad36a854c88137a93ca4e 
+Currently we use staging framebuffer TFT driver which has poorly implemented
+depndency on the backlight module - in short the LCD driver cannot turn on
+pwm_backlight automatically. 
+Because of that we made a simple single-line change in the pwm_backlight
+driver to make sure that it will be always enabled during a bootup.
+In the future we would like to switch to the newer DRM based LCD driver which
+should also resolve the automatic enabling of the pwm_backlight (see
+BOS-2213).
