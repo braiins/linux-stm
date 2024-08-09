@@ -33,6 +33,7 @@ DTC_FLAGS_stm32mp157f-ev1-m4-examples += -@
 DTC_FLAGS_stm32mp157c-ii1-am2 += -@
 DTC_FLAGS_stm32mp157c-ii1-am2_p03_a12 += -@
 DTC_FLAGS_stm32mp157c-ii1-am2_som += -@
+DTC_FLAGS_stm32mp157c-ii2-bmm1 += -@
 
 dtb-$(CONFIG_ARCH_ALPINE) += \
 	alpine-db.dtb
@@ -1126,7 +1127,8 @@ dtb-$(CONFIG_ARCH_STM32) += \
 	stm32mp157c-odyssey.dtb \
 	stm32mp157c-ii1-am2.dtb \
 	stm32mp157c-ii1-am2_p03_a12.dtb \
-	stm32mp157c-ii1-am2_som.dtb
+	stm32mp157c-ii1-am2_som.dtb \
+	stm32mp157c-ii2-bmm1.dtb
 dtb-$(CONFIG_MACH_SUN4I) += \
 	sun4i-a10-a1000.dtb \
 	sun4i-a10-ba10-tvbox.dtb \
