@@ -35,19 +35,15 @@ enum st7365p_command {
 #define MADCTL_RGB	0x00
 #define MADCTL_MH	0x04 // Horizontal Refresh Order
 
-#define TFT_NO_ROTATION	(MADCTL_MX)
-#define TFT_ROTATE_90	(MADCTL_MV | MADCTL_MX | MADCTL_MY)
-#define TFT_ROTATE_180	(MADCTL_MY)
-#define TFT_ROTATE_270	(MADCTL_MV)
-
 /**
  * init_display() - initialize the display controller
+ *
+ * @par: FBTFT parameter object
+ *
+ * Return: 0 on success, < 0 if error occurred.
  */
-
 static int init_display(struct fbtft_par *par)
 {
-	uint8_t madctrl_data;
-
 	pr_info("ST7796 driver: load");
 	pr_info("ST7796 Rotation: %d",par->pdata->rotate);
 
@@ -62,35 +58,6 @@ static int init_display(struct fbtft_par *par)
 	write_reg(par, CSCON, 0x00C3);
 	write_reg(par, CSCON, 0x0096);
 
-
-	switch (par->pdata->rotate)
-	{
-	case 90:
-		pr_info("ST7796 Set rotation 90");
-		madctrl_data = TFT_ROTATE_90;
-		break;
-
-	case 180:
-		pr_info("ST7796 Set rotation 180");
-		madctrl_data = TFT_ROTATE_180;
-		break;
-
-	case 270:
-		pr_info("ST7796 Set rotation 270");
-		madctrl_data = TFT_ROTATE_270;
-		break;
-
-	default:
-		pr_info("ST7796 Set rotation 0");
-		madctrl_data = TFT_NO_ROTATION;
-		break;
-	}
-
-	madctrl_data |= MADCTL_RGB;
-
-	pr_info("ST7796 MADCTRL: 0x%0X",madctrl_data);
-
-	write_reg(par, MIPI_DCS_SET_ADDRESS_MODE, madctrl_data);
 	write_reg(par, MIPI_DCS_SET_PIXEL_FORMAT, 0x0055);
 
 	write_reg(par, DIC, 0x0001);
@@ -111,6 +78,44 @@ static int init_display(struct fbtft_par *par)
 
 	write_reg(par, MIPI_DCS_ENTER_INVERT_MODE);
 
+	return 0;
+}
+
+/**
+ * set_var() - apply LCD properties like rotation and BGR mode
+ *
+ * @par: FBTFT parameter object
+ *
+ * Return: 0 on success, < 0 if error occurred.
+ */
+static int set_var(struct fbtft_par *par)
+{
+	u8 madctl_par = 0;
+
+	// NOTE: The meaning of this attribute has opposite effect on the controller so
+	// 'MADCTL_BGR' is used for RGB mode
+	// it is possibly connected with usage of 'MIPI_DCS_ENTER_INVERT_MODE'
+	if (!par->bgr)
+		madctl_par |= MADCTL_BGR;
+	switch (par->info->var.rotate) {
+	case 0:
+		madctl_par |= (MADCTL_MX);
+		break;
+	case 90:
+		madctl_par |= (MADCTL_MV | MADCTL_MX | MADCTL_MY);
+		break;
+	case 180:
+		madctl_par |= (MADCTL_MY);
+		break;
+	case 270:
+		madctl_par |= (MADCTL_MV);
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	pr_info("ST7796 MADCTRL: 0x%0X", madctl_par);
+	write_reg(par, MIPI_DCS_SET_ADDRESS_MODE, madctl_par);
 	return 0;
 }
 
@@ -196,6 +201,7 @@ static struct fbtft_display display = {
 	.gamma = DEFAULT_GAMMA,
 	.fbtftops = {
 		.init_display = init_display,
+		.set_var = set_var,
 		.set_gamma = set_gamma,
 		.blank = blank,
 	},
