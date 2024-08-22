@@ -16,7 +16,7 @@
 #define ST7796S_MADCTL_BGR 0x08 // RGB-BGR ORDER
 #define ST7796S_MADCTL_RGB 0x00
 #define ST7796S_MADCTL_MH  0x04 // Horizontal Refresh Order
-#define ST7796S_COLOR      ST7796S_MADCTL_BGR
+#define ST7796S_COLOR      ST7796S_MADCTL_RGB
 
 #define ST7796S_NOP        0x00 // No Operation
 #define ST7796S_SWRESET    0x01 // Software reset
@@ -93,10 +93,10 @@
 #define ST7796S_CSCON      0xF0 // Command Set Control
 #define ST7796S_SPIRC      0xFB // SPI Read Control
 
-#define TFT_NO_ROTATION           (ST7796S_MADCTL_MV)
-#define TFT_ROTATE_90             (ST7796S_MADCTL_MX)
-#define TFT_ROTATE_180            (ST7796S_MADCTL_MV | ST7796S_MADCTL_MX | ST7796S_MADCTL_MY)
-#define TFT_ROTATE_270            (ST7796S_MADCTL_MY)
+#define TFT_NO_ROTATION           (ST7796S_MADCTL_MX)
+#define TFT_ROTATE_90             (ST7796S_MADCTL_MV | ST7796S_MADCTL_MX | ST7796S_MADCTL_MY)
+#define TFT_ROTATE_180            (ST7796S_MADCTL_MY)
+#define TFT_ROTATE_270            (ST7796S_MADCTL_MV)
 
 /**
  * init_display() - initialize the display controller
@@ -168,6 +168,8 @@ static int init_display(struct fbtft_par *par)
 	write_reg(par, ST7796S_CSCON, 0x0069);
 	write_reg(par, ST7796S_DISPON);
 
+	write_reg(par, MIPI_DCS_ENTER_INVERT_MODE);
+
 	return 0;
 }
 
@@ -185,8 +187,8 @@ static int blank(struct fbtft_par *par, bool on)
 
 static struct fbtft_display display = {
 	.regwidth = 8,
-	.width = 480,
-	.height = 320,
+	.width = 320,
+	.height = 480,
 	.fbtftops = {
 		.init_display = init_display,
 		.blank = blank,
