@@ -47,6 +47,8 @@ static int init_display(struct fbtft_par *par)
 	pr_info("ST7796 driver: load");
 	pr_info("ST7796 Rotation: %d",par->pdata->rotate);
 
+	par->fbtftops.reset(par);
+
 	write_reg(par, MIPI_DCS_SOFT_RESET);
 	mdelay(100);
 
