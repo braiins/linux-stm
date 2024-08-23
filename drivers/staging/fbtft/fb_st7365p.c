@@ -44,9 +44,6 @@ enum st7365p_command {
  */
 static int init_display(struct fbtft_par *par)
 {
-	pr_info("ST7365P driver: load");
-	pr_info("ST7365P Rotation: %d",par->pdata->rotate);
-
 	par->fbtftops.reset(par);
 
 	write_reg(par, MIPI_DCS_SOFT_RESET);
@@ -114,7 +111,6 @@ static int set_var(struct fbtft_par *par)
 		return -EINVAL;
 	}
 
-	pr_info("ST7365P MADCTRL: 0x%0X", madctl_par);
 	write_reg(par, MIPI_DCS_SET_ADDRESS_MODE, madctl_par);
 	return 0;
 }
