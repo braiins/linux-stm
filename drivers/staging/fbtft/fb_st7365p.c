@@ -215,5 +215,5 @@ MODULE_ALIAS("spi:st7365p");
 MODULE_ALIAS("platform:st7365p");
 
 MODULE_DESCRIPTION("FB driver for the ST7365P LCD Controller");
-MODULE_AUTHOR("NNN");
+MODULE_AUTHOR("Braiins Systems s.r.o.");
 MODULE_LICENSE("GPL");
