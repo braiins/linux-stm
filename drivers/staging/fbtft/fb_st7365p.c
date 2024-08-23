@@ -7,7 +7,7 @@
 
 #include "fbtft.h"
 
-#define DRVNAME "fb_st7796s"
+#define DRVNAME "fb_st7365p"
 
 #define DEFAULT_GAMMA \
 	"F0 04 08 09 08 15 2F 42 46 28 15 16 29 2D\n" \
@@ -44,8 +44,8 @@ enum st7365p_command {
  */
 static int init_display(struct fbtft_par *par)
 {
-	pr_info("ST7796 driver: load");
-	pr_info("ST7796 Rotation: %d",par->pdata->rotate);
+	pr_info("ST7365P driver: load");
+	pr_info("ST7365P Rotation: %d",par->pdata->rotate);
 
 	par->fbtftops.reset(par);
 
@@ -114,7 +114,7 @@ static int set_var(struct fbtft_par *par)
 		return -EINVAL;
 	}
 
-	pr_info("ST7796 MADCTRL: 0x%0X", madctl_par);
+	pr_info("ST7365P MADCTRL: 0x%0X", madctl_par);
 	write_reg(par, MIPI_DCS_SET_ADDRESS_MODE, madctl_par);
 	return 0;
 }
@@ -207,13 +207,13 @@ static struct fbtft_display display = {
 	},
 };
 
-FBTFT_REGISTER_DRIVER(DRVNAME, "sitronix,st7796s", &display);
+FBTFT_REGISTER_DRIVER(DRVNAME, "sitronix,st7365p", &display);
 
 MODULE_ALIAS("spi:" DRVNAME);
 MODULE_ALIAS("platform:" DRVNAME);
-MODULE_ALIAS("spi:st7796s");
-MODULE_ALIAS("platform:st7796s");
+MODULE_ALIAS("spi:st7365p");
+MODULE_ALIAS("platform:st7365p");
 
-MODULE_DESCRIPTION("FB driver for the ST7796S LCD Controller");
+MODULE_DESCRIPTION("FB driver for the ST7365P LCD Controller");
 MODULE_AUTHOR("NNN");
 MODULE_LICENSE("GPL");
