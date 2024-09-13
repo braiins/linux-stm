@@ -2412,6 +2412,14 @@ static void __init prom_check_displays(void)
 				break;
 #endif /* CONFIG_LOGO_LINUX_CLUT224 */
 
+#ifdef CONFIG_LOGO_BMM101_CLUT224
+		clut = PTRRELOC(logo_bmm101_clut224.clut);
+		for (i = 0; i < logo_bmm101_clut224.clutsize; i++, clut += 3)
+			if (prom_set_color(ih, i + 32, clut[0], clut[1],
+					   clut[2]) != 0)
+				break;
+#endif /* CONFIG_LOGO_BMM101_CLUT224 */
+
 #ifdef CONFIG_PPC_EARLY_DEBUG_BOOTX
 		if (prom_getprop(node, "linux,boot-display", NULL, 0) !=
 		    PROM_ERROR) {
