@@ -1268,6 +1268,10 @@ reset:
 			return error;
 	}
 
+    /*
+     HACK: In order to not include unnecessary module `DRM_MIPI_DSI` in the kernel,
+     we need to comment out the following code.
+
 	np = of_parse_phandle(client->dev.of_node, "panel", 0);
 	if (np) {
 		panel = of_find_mipi_dsi_device_by_node(np);
@@ -1278,6 +1282,7 @@ reset:
 				DL_FLAG_AUTOREMOVE_SUPPLIER);
 		put_device(&panel->dev);
 	}
+	*/
 
 	return 0;
 }
